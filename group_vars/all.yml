@@ -1,0 +1,60 @@
+---
+
+# Application version information
+dolphinscheduler_front_version: "{{ dolphinscheduler_version }}-dolphinscheduler-front-bin"
+dolphinscheduler_backend_version: "{{ dolphinscheduler_version }}-dolphinscheduler-backend-bin"
+nginx_version: "1.10.3"
+jdk_version: "jdk8u232-b09"
+zookeeper_version: "3.4.14"
+mysql_version: "5.7.28-linux-glibc2.12-x86_64"
+
+# Variables here are applicable to all host groups
+deploy_user: "{{ ansible_user }}"
+status_dir: "{{ deploy_dir }}/status"
+backup_dir: "{{ deploy_dir }}/backup"
+images_dir: "{{ deploy_dir }}/images"
+
+# Local
+#downloads_dir: "{{ playbook_dir }}/downloads"
+#fetch_tmp_dir: "{{ playbook_dir }}/collect_diagnosis_data"
+#fetch_dir:     "{{ playbook_dir }}/collect_diagnosis"
+#cert_dir:      "{{ playbook_dir }}/conf/ssl"
+#script_dir:    "{{ playbook_dir }}/scripts"
+resources_dir: "{{ playbook_dir }}/resources"
+pkg_dir:    "{{ playbook_dir }}/resources/pkg"
+
+# Roles directory
+zookeeper_deploy_path: "{{ deploy_dir }}/zookeeper/zookeeper-{{ zookeeper_version }}"
+nginx_deploy_path: "{{ deploy_dir }}/nginx/deploy"
+nginx_vhost: "{{ deploy_dir }}/nginx/vhost"
+mysql_deploy_path: "{{ deploy_dir }}/mysql/mysql-{{ mysql_version }}"
+jdk_deploy_path: "{{ deploy_dir }}/jdk/{{ jdk_version }}"
+ds_backend_deploy_path: "{{ deploy_dir }}/backend/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}"
+ds_front_deploy_path: "{{ nginx_vhost }}/dolphinscheduler/apache-dolphinscheduler-incubating-{{ dolphinscheduler_front_version }}"
+
+# Random shifts for retrying failed ops like downloading
+retry_stagger: 5
+
+deployment_method: easy
+
+enable_log_clean: False
+log_retain_days: 28
+
+dev_mode: False
+
+# systemd: Specifies whether to send SIGKILL to remaining processes after a timeout.
+disable_send_sigkill: False
+
+# Database connection url
+mysql_port: 3306
+postgresql_port: 5432
+
+mysql_driver: com.mysql.jdbc.Driver
+postgresql_driver: org.postgresql.Driver
+
+mysql_driver_delegate_class: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+postgresql_driver_delegate_class: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+
+mysql_url: jdbc:mysql://{{ groups['db_servers'][0] }}:{{ mysql_port }}/dolphinscheduler?useUnicode=true&characterEncoding=UTF-8
+postgresql_url: jdbc:postgresql://{{ groups['db_servers'][0] }}:{{ postgresql_port }}/dolphinscheduler?characterEncoding=utf8
+

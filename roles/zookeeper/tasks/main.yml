@@ -1,0 +1,29 @@
+---
+
+- name: zookeeper create related folders
+  file: name={{ item }} state=directory mode=755
+  with_items:
+    - "{{ zookeeper_dir }}"
+    - "{{ zookeeper_data }}"
+    - "{{ zookeeper_log }}"
+
+- name: zookeeper install
+  unarchive:
+    src={{ pkg_dir }}/zookeeper-{{ zookeeper_version }}.tar.gz
+    dest={{ deploy_dir }}/zookeeper/
+    mode=755
+
+- name: zookeeper add myid file
+  shell: "echo {{ myid }} > {{ zookeeper_data }}/myid"
+
+- name: zookeeper copy zoo.cfg
+  template: src=zoo.cfg.j2 dest={{ zookeeper_deploy_path }}/conf/zoo.cfg mode=755
+
+- name: zookeeper source profile
+  lineinfile: dest="~/.bash_profile" state=present regexp={{ item.regexp }} line={{ item.line }}
+  with_items:
+    - { regexp: 'ZOOKEEPER_HOME=', line: 'export ZOOKEEPER_HOME={{ zookeeper_deploy_path }}' }
+    - { regexp: 'PATH=\$ZOOKEEPER_HOME', line: 'export PATH=$ZOOKEEPER_HOME/bin:$PATH' }
+
+- name: zookeeper specifying the log location
+  replace: dest={{ zookeeper_deploy_path }}/bin/zkEnv.sh regexp='ZOO_LOG_DIR=\".\"' replace='ZOO_LOG_DIR=\"{{ zookeeper_log }}\"' backup=yes

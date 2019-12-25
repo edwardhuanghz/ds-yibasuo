@@ -1,0 +1,87 @@
+---
+
+# systemctl stop mysqld.service && rm -rf /usr/lib/systemd/system/mysqld.service && rm -rf /etc/init.d/mysql && rm -rf /home/easy/ds/mysql/
+
+# check env
+- name: mysql required packages install
+  yum:
+    name:
+      - net-tools
+      - bash-completion
+      - gcc
+      - unzip
+      - perl-Data-Dumper
+      - libaio-devel
+    state: latest
+
+# copy
+- name: mysql create related folders
+  file: name={{ item }} state=directory mode=755 recurse=yes
+  with_items:
+    - "{{ mysql_dir }}"
+    - "{{ mysql_data }}"
+
+- name: mysql install
+  unarchive:
+    src={{ pkg_dir }}/mysql-{{ mysql_version }}.tar.gz
+    dest={{ mysql_dir }}
+    mode=755
+
+- name: mysql copy config
+  template: src=my.cnf.j2 dest=/etc/my.cnf mode=755
+
+- name: mysql copy service
+  template: src=mysqld.service.j2 dest=/usr/lib/systemd/system/mysqld.service mode=755
+
+- name: mysql copy change pasword shell
+  template: src=change_password.sh.j2 dest={{ mysql_deploy_path }}/change_password.sh mode=755
+
+- name: mysql copy create ds user shell
+  template: src=ds_mysql_user.sh.j2 dest={{ mysql_deploy_path }}/ds_mysql_user.sh mode=755
+
+- name: mysql create directories needed at runtime
+  file: name={{ item }} state=directory mode=755 recurse=yes
+  with_items:
+    - "/var/log/mysql"
+    - "/var/run/mysqld"
+    - "{{ mysql_deploy_path }}/tmp"
+    - "{{ mysql_deploy_path }}/log"
+
+- name: mysql create error log
+  file: dest={{ mysql_deploy_path }}/log/error.log state=touch mode=777
+
+# install
+- name: mysql init
+  shell: "{{ mysql_deploy_path }}/bin/mysqld --initialize-insecure --user={{ db_username }} --basedir={{ mysql_deploy_path }}  --datadir={{ mysql_data }}"
+
+- name: mysql copy server to etc
+  copy: src={{ mysql_deploy_path }}/support-files/mysql.server dest=/etc/init.d/mysql
+
+- name: mysql change config 1
+  lineinfile:
+    dest: /etc/init.d/mysql
+    regexp: "^basedir="
+    insertbefore: "^# Default value, in seconds, afterwhich the script should timeout waiting"
+    line: "basedir={{ mysql_deploy_path }}"
+
+- name: mysql change config 2
+  lineinfile:
+    dest: /etc/init.d/mysql
+    regexp: "^datadir="
+    insertbefore: "^# Default value, in seconds, afterwhich the script should timeout waiting"
+    line: "datadir={{ mysql_deploy_path }}"
+
+- name: mysql change config 3
+  file: dest=/etc/init.d/mysql state=file mode=755
+
+- name: mysql source profile
+  shell: 'if [ `grep {{ mysql_deploy_path }}/bin /etc/profile | wc -l` -eq 0 ]; then echo export PATH={{ mysql_deploy_path }}/bin:\$PATH >> /etc/profile && source /etc/profile; else source /etc/profile; fi'
+
+- name: mysql start
+  shell: "systemctl daemon-reload && systemctl enable mysqld && systemctl start mysqld"
+
+- name: mysql setting root password
+  shell: "bash {{ mysql_deploy_path }}/change_password.sh"
+
+- name: mysql setting ds user
+  shell: "bash {{ mysql_deploy_path }}/ds_mysql_user.sh"

@@ -1,0 +1,11 @@
+---
+
+- name: ds backend delete zk node
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: master_servers
+  tags:
+    zk
+  tasks:
+    - name: clean
+      shell: "{{ deploy_dir }}/backend/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}/bin/del_zk_node.sh {{ zookeeper_root }}"

@@ -1,0 +1,36 @@
+---
+
+- name: zk
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: zookeeper_servers
+  tags:
+    - zookeeper
+  tasks:
+    - name: start
+      shell: "source ~/.bash_profile && source /etc/profile && sh {{ zookeeper_deploy_path }}/bin/zkServer.sh restart"
+
+- name: backend
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: master_servers
+  tags:
+    - backend
+  tasks:
+    - name: ds backend stop server
+      shell: "{{ deploy_dir }}/backend/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}/script/stop-all.sh"
+
+    - name: ds backend start
+      shell: "{{ deploy_dir }}/backend/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}/script/start-all.sh"
+
+- name: front
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: nginx_servers
+  tags:
+    - front
+  tasks:
+    - name: nginx start
+      shell: "systemctl restart nginx.service"

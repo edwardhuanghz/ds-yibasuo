@@ -1,0 +1,3 @@
+zookeeper_dir: "{{ deploy_dir }}/zookeeper"
+zookeeper_data: "{{ deploy_dir }}/zookeeper/data"
+zookeeper_log: "{{ deploy_dir }}/zookeeper/logs"

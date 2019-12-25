@@ -1,0 +1,11 @@
+clientPort=2181
+tickTime=2000
+initLimit=10
+syncLimit=5
+maxClientCnxns=8192
+dataDir={{ deploy_dir }}/zookeeper/data
+dataLogDir={{ deploy_dir }}/zookeeper/logs
+
+{% for url in groups['zookeeper_servers'] %}
+server.{{ loop.index }}={{ url }}:2888:3888
+{% endfor %}

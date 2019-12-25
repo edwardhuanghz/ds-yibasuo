@@ -1,0 +1,115 @@
+---
+
+# Merge variables
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/alert.yml name=alert_custom
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/api.yml name=api_custom
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/common.yml name=common_custom
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/hadoop.yml name=hadoop_custom
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/master.yml name=master_custom
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/nginx.yml name=nginx_custom
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/worker.yml name=worker_custom
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/zookeeper.yml name=zookeeper_custom
+
+- name: load default config
+  include_vars: file=default.yml name=conf_default
+
+- name: combine final config
+  set_fact:
+    alert_conf: "{{ {} | with_default_dicts(alert_custom, conf_default) | update_default_dicts }}"
+    api_conf: "{{ {} | with_default_dicts(api_custom, conf_default) | update_default_dicts }}"
+    common_conf: "{{ {} | with_default_dicts(common_custom, conf_default) | update_default_dicts }}"
+    hadoop_conf: "{{ {} | with_default_dicts(hadoop_custom, conf_default) | update_default_dicts }}"
+    master_conf: "{{ {} | with_default_dicts(master_custom, conf_default) | update_default_dicts }}"
+    nginx_conf: "{{ {} | with_default_dicts(nginx_custom, conf_default) | update_default_dicts }}"
+    worker_conf: "{{ {} | with_default_dicts(worker_custom, conf_default) | update_default_dicts }}"
+    zookeeper_conf: "{{ {} | with_default_dicts(zookeeper_custom, conf_default) | update_default_dicts }}"
+
+# Distributing files to the cluster.
+- name: ds backend create related folders
+  file: name={{ item }} state=directory mode=755 recurse=yes
+  with_items:
+    - "{{ ds_backend_dir }}"
+
+- name: ds backend install
+  unarchive:
+    src={{ pkg_dir }}/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}.tar.gz
+    dest={{ ds_backend_dir }}
+    mode=755
+
+# Replace configuration file.
+- name: ds backend copy env
+  template: src=dolphinscheduler_env.sh.j2 dest={{ ds_backend_deploy_path }}/conf/env/.dolphinscheduler_env.sh mode=755
+
+- name: ds backend copy zk del shell
+  template: src=del_zk_node.sh.j2 dest={{ ds_backend_deploy_path }}/bin/del_zk_node.sh mode=755
+
+- name: ds backend copy application-dao.properties
+  template: src=application-dao.properties.j2 dest={{ ds_backend_deploy_path }}/conf/application-dao.properties mode=755
+
+- name: ds backend copy quartz.properties
+  template: src=quartz.properties.j2 dest={{ ds_backend_deploy_path }}/conf/quartz.properties mode=755
+
+- name: ds backend copy hadoop.properties
+  template: src=hadoop.properties.j2 dest={{ ds_backend_deploy_path }}/conf/common/hadoop/hadoop.properties mode=755
+
+- name: ds backend copy common.properties
+  template: src=common.properties.j2 dest={{ ds_backend_deploy_path }}/conf/common/common.properties mode=755
+
+- name: ds backend copy zookeeper.properties
+  template: src=zookeeper.properties.j2 dest={{ ds_backend_deploy_path }}/conf/zookeeper.properties mode=755
+
+- name: ds backend copy master.properties
+  template: src=master.properties.j2 dest={{ ds_backend_deploy_path }}/conf/master.properties mode=755
+
+- name: ds backend copy application-master.properties
+  template: src=application-master.properties.j2 dest={{ ds_backend_deploy_path }}/conf/application-master.properties mode=755
+
+- name: ds backend copy worker.properties
+  template: src=worker.properties.j2 dest={{ ds_backend_deploy_path }}/conf/worker.properties mode=755
+
+- name: ds backend copy application-worker.properties
+  template: src=application-worker.properties.j2 dest={{ ds_backend_deploy_path }}/conf/application-worker.properties mode=755
+
+- name: ds backend copy application-api.properties
+  template: src=application-api.properties.j2 dest={{ ds_backend_deploy_path }}/conf/application-api.properties mode=755
+
+- name: ds backend copy alert.properties
+  template: src=alert.properties.j2 dest={{ ds_backend_deploy_path }}/conf/alert.properties mode=755
+
+- name: ds backend copy install_config.conf
+  template: src=install_config.conf.j2 dest={{ ds_backend_deploy_path }}/conf/config/install_config.conf mode=755
+
+- name: ds backend copy run_config.conf
+  template: src=run_config.conf.j2 dest={{ ds_backend_deploy_path }}/conf/config/run_config.conf mode=755
+
+- name: ds backend copy mysql client
+  copy:
+    src="{{ pkg_dir }}/mysql-connector-java-5.1.48.jar"
+    dest={{ ds_backend_deploy_path }}/lib/mysql-connector-java-5.1.48.jar
+  when: db_type == "mysql"
+
+- name: ds backend add an environment variable patch for startup
+  shell: sed -i 'N;2a source ~/.bash_profile && source /etc/profile' {{ ds_backend_deploy_path }}/bin/dolphinscheduler-daemon.sh

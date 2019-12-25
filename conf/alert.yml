@@ -1,0 +1,42 @@
+---
+
+alert:
+  # alert.type:
+
+  # mail.protocol:
+
+  # mail.server.host:
+
+  # mail.server.port:
+
+  # mail.sender:
+
+  # mail.user:
+
+  # mail.passwd:
+
+  # mail.smtp.starttls.enable:
+
+  # mail.smtp.ssl.enable:
+
+  # mail.smtp.ssl.trust:
+
+  # xls.file.path:
+
+  # enterprise.wechat.enable:
+
+  # enterprise.wechat.corp.id:
+
+  # enterprise.wechat.secret:
+
+  # enterprise.wechat.agent.id:
+
+  # enterprise.wechat.users:
+
+  # enterprise.wechat.token.url:
+
+  # enterprise.wechat.push.url:
+
+  # enterprise.wechat.team.send.msg:
+
+  # enterprise.wechat.user.send.msg:

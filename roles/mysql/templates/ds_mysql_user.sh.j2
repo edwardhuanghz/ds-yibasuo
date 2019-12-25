@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source ~/.bash_profile && source /etc/profile
+
+db={{ db_name }}
+user={{ db_username }}
+password={{ db_password }}
+
+mysql -uroot -p$password -e "CREATE DATABASE $db DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+
+mysql -uroot -p$password -e "GRANT ALL PRIVILEGES ON $db.* TO '$user'@'%' IDENTIFIED BY '$password';"
+
+mysql -uroot -p$password -e "GRANT ALL PRIVILEGES ON $db.* TO '$user'@'localhost' IDENTIFIED BY '$password';"
+
+mysql -uroot -p$password -e "FLUSH PRIVILEGES;"

@@ -1,0 +1,30 @@
+---
+
+common:
+  # dolphinscheduler.queue.impl:
+
+  # data.basedir.path:
+
+  # data.download.basedir.path:
+
+  # process.exec.basepath:
+
+  # hdfs.root.user:
+
+  data.store2hdfs.basepath: "{{ deploy_dir }}/backend/resource"
+
+  # res.upload.startup.type:
+
+  # hadoop.security.authentication.startup.state:
+
+  # java.security.krb5.conf.path:
+
+  # login.user.keytab.username:
+
+  # login.user.keytab.path:
+
+  # dolphinscheduler.env.path:
+
+  # resource.view.suffixs:
+
+  # development.state:

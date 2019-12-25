@@ -1,0 +1,4 @@
+---
+
+- name: ds backend init db
+  shell: "source ~/.bash_profile && sh {{ deploy_dir }}/backend/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}/script/create-dolphinscheduler.sh"

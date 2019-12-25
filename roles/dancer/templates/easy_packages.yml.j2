@@ -1,0 +1,37 @@
+---
+
+nginx_packages:
+  - name: nginx
+    version: {{ nginx_version }}
+    url: "http://nginx.org/download/nginx-{{ nginx_version }}.tar.gz"
+
+jdk_packages:
+  - name: jdk
+    version: {{ jdk_version }}
+    url: "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u232-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u232b09.tar.gz"
+
+zookeeper_packages:
+  - name: zookeeper
+    version: {{ zookeeper_version }}
+    url: "https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.4.14/zookeeper-{{ zookeeper_version }}.tar.gz"
+
+mysql_packages:
+  - name: mysql
+    version: {{ mysql_version }}
+    #url: "http://10.10.56.138/test/mysql-{{ mysql_version }}.tar.gz"
+    url: "https://cdn.mysql.com/Downloads/MySQL-5.7/mysql-{{ mysql_version }}.tar.gz"
+
+dolphinscheduler_front_packages:
+  - name: apache-dolphinscheduler-incubating
+    version: {{ dolphinscheduler_front_version }}
+    url: "https://dist.apache.org/repos/dist/dev/incubator/dolphinscheduler/1.2.0/apache-dolphinscheduler-incubating-{{ dolphinscheduler_front_version }}.tar.gz"
+
+dolphinscheduler_backend_packages:
+  - name: apache-dolphinscheduler-incubating
+    version: {{ dolphinscheduler_backend_version }}
+    url: "https://dist.apache.org/repos/dist/dev/incubator/dolphinscheduler/1.2.0/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}.tar.gz"
+
+mysql_client_jar:
+  - name: mysql-connector-java
+    version: 5.1.48
+    url: "https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.48/mysql-connector-java-5.1.48.jar"

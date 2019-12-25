@@ -1,0 +1,13 @@
+retry_files/
+downloads/
+fact_files/
+conf/keys
+scripts/dests.json
+
+.vagrant/
+*.retry
+*.pyc
+.vscode
+.DS_Store
+*.log
+.idea

@@ -1,0 +1,30 @@
+---
+
+- name: upgrade ds backend
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: servers
+  tags:
+    - backend
+  roles:
+    - backend
+
+- name: backend
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: master_servers
+  tags:
+    - backend
+  tasks:
+    - name: ds backend stop
+      shell: "{{ deploy_dir }}/backend/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}/script/stop-all.sh"
+
+- name: backend
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: master_servers
+  tags:
+    - backend
+  tasks:
+    - name: ds backend start
+      shell: "{{ deploy_dir }}/backend/apache-dolphinscheduler-incubating-{{ dolphinscheduler_backend_version }}/script/start-all.sh"

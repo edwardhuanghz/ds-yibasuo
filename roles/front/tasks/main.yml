@@ -1,0 +1,26 @@
+---
+
+- name: load custom
+  include_vars:
+    file={{ playbook_dir }}/conf/nginx.yml name=nginx_custom
+
+- name: load default config
+  include_vars: file=default.yml name=conf_default
+
+- name: combine final config
+  set_fact:
+    nginx_conf: "{{ {} | with_default_dicts(nginx_custom, conf_default) | update_default_dicts }}"
+
+- name: ds front create related folders
+  file: name={{ item }} state=directory mode=755 recurse=yes
+  with_items:
+    - "{{ ds_front_deploy_path }}"
+
+- name: ds front install
+  unarchive:
+    src={{ pkg_dir }}/apache-dolphinscheduler-incubating-{{ dolphinscheduler_front_version }}.tar.gz
+    dest={{ ds_front_dir }}
+    mode=755
+
+- name: ds front copy conf
+  template: src=dolphinscheduler.conf.j2 dest={{ nginx_vhost }}/dolphinscheduler.conf mode=755

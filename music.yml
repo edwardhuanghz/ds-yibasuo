@@ -1,0 +1,30 @@
+---
+
+- name: check config static
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - check_config_static
+
+- name: check config node
+  hosts: all
+  gather_facts: false
+  become: true
+  roles:
+    - pre-ansible
+#    - bootstrap
+
+- name: check system
+  become: yes
+  become_method: sudo
+  hosts: all
+  any_errors_fatal: true
+  roles:
+    - check_system_static
+
+- name: open the music
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - music

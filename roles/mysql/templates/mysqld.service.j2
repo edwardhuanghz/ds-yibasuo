@@ -1,0 +1,17 @@
+[Unit]
+Description=MySQL Server
+After=network.target
+After=syslog.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+User={{ db_username }}
+Group={{ db_username }}
+ExecStart={{ mysql_deploy_path }}/bin/mysqld --defaults-file=/etc/my.cnf
+
+LimitNOFILE=65535
+LimitNPROC=65535
+
+PrivateTmp=false

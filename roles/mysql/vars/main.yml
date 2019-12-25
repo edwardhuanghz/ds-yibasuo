@@ -1,0 +1,2 @@
+mysql_dir: "{{ deploy_dir }}/mysql/"
+mysql_data: "{{ deploy_dir }}/mysql/data"

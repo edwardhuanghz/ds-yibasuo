@@ -1,0 +1,113 @@
+---
+
+# Configure for hadoop.properties
+hadoop:
+  fs.defaultFS: "hdfs://mycluster:8020"
+  fs.s3a.endpoint: "http://192.168.199.91:9010"
+  fs.s3a.access.key: "A3DXS30FO22544RE"
+  fs.s3a.secret.key: "OloCLq3n+8+sdPHUhJ21XrSxTC+JK"
+  yarn.resourcemanager.ha.rm.ids: "192.168.xx.xx,192.168.xx.xx"
+  yarn.application.status.address: "http://ark1:8088/ws/v1/cluster/apps/%s"
+
+
+# Configure for common.properties
+common:
+  dolphinscheduler.queue.impl: "zookeeper"
+  data.basedir.path: "/tmp/dolphinscheduler"
+  data.download.basedir.path: "/tmp/dolphinscheduler/download"
+  process.exec.basepath: "/tmp/dolphinscheduler/exec"
+  hdfs.root.user: "hdfs"
+  data.store2hdfs.basepath: "/dolphinscheduler"
+  res.upload.startup.type: "NONE"
+  hadoop.security.authentication.startup.state: "false"
+  java.security.krb5.conf.path: "/opt/krb5.conf"
+  login.user.keytab.username: "hdfs-mycluster@ESZ.COM"
+  login.user.keytab.path: "/opt/hdfs.headless.keytab"
+  dolphinscheduler.env.path: "/opt/.dolphinscheduler_env.sh"
+  resource.view.suffixs: "txt,log,sh,conf,cfg,py,java,sql,hql,xml"
+  development.state: "true"
+
+
+# Configure for zookeeper.properties
+zookeeper:
+  zookeeper.quorum: ""
+  zookeeper.dolphinscheduler.root: "/dolphinscheduler"
+  zookeeper.dolphinscheduler.dead.servers: "/dolphinscheduler/dead-servers"
+  zookeeper.dolphinscheduler.masters: "/dolphinscheduler/masters"
+  zookeeper.dolphinscheduler.workers: "/dolphinscheduler/workers"
+  zookeeper.dolphinscheduler.lock.masters: "/dolphinscheduler/lock/masters"
+  zookeeper.dolphinscheduler.lock.workers: "/dolphinscheduler/lock/workers"
+  zookeeper.dolphinscheduler.lock.failover.masters: "/dolphinscheduler/lock/failover/masters"
+  zookeeper.dolphinscheduler.lock.failover.workers: "/dolphinscheduler/lock/failover/workers"
+  zookeeper.dolphinscheduler.lock.failover.startup.masters: "/dolphinscheduler/lock/failover/startup-masters"
+  zookeeper.session.timeout: 300
+  zookeeper.connection.timeout: 300
+  zookeeper.retry.sleep: 1000
+  zookeeper.retry.maxtime: 5
+
+
+# Configure for master.properties
+master:
+  master.exec.threads: 100
+  master.exec.task.number: 20
+  master.heartbeat.interval: 10
+  master.task.commit.retryTimes: 5
+  master.task.commit.interval: 100
+  master.max.cpuload.avg: 100
+  master.reserved.memory: 0.1
+
+apimaster:
+  logging.config: "classpath:master_logback.xml"
+  server.port: 5566
+
+# Configure for worker.properties
+worker:
+  worker.exec.threads: 100
+  worker.heartbeat.interval: 10
+  worker.fetch.task.num :  3
+  worker.max.cpuload.avg: 10
+  worker.reserved.memory: 1
+
+apiworker:
+  logging.config: "classpath:worker_logback.xml"
+  server.port: 7788
+
+
+# Configure for application-api.properties
+api:
+  logging.config: "classpath:apiserver_logback.xml"
+  server.port: 12345
+  server.servlet.session.timeout: 7200
+  server.servlet.context-path: "/dolphinscheduler/"
+  spring.servlet.multipart.max-file-size: "1024MB"
+  spring.servlet.multipart.max-request-size: "1024MB"
+  server.jetty.max-http-post-size: 5000000
+  spring.messages.encoding: "UTF-8"
+  spring.messages.basename: "i18n/messages"
+
+
+# Configure for alert.properties
+alert:
+  alert.type: "EMAIL"
+
+  mail.protocol: "SMTP"
+  mail.server.host: "xxx.xxx.com"
+  mail.server.port: "25"
+  mail.sender: "xxx@xxx.com"
+  mail.user: "xxx@xxx.com"
+  mail.passwd: "111111"
+  mail.smtp.starttls.enable: "true"
+  mail.smtp.ssl.enable: "false"
+  mail.smtp.ssl.trust: "xxx.xxx.com"
+
+  xls.file.path: "/tmp/xls"
+
+  enterprise.wechat.enable: "false"
+  enterprise.wechat.corp.id: "xxxxxxx"
+  enterprise.wechat.secret: "xxxxxxx"
+  enterprise.wechat.agent.id: "xxxxxxx"
+  enterprise.wechat.users: "xxxxxxx"
+  enterprise.wechat.token.url: "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$corpId&corpsecret=$secret"
+  enterprise.wechat.push.url: "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$token"
+  enterprise.wechat.team.send.msg: "{\"toparty\":\"$toParty\",\"agentid\":\"$agentId\",\"msgtype\":\"text\",\"text\":{\"content\":\"$msg\"},\"safe\":\"0\"}"
+  enterprise.wechat.user.send.msg: "{\"touser\":\"$toUser\",\"agentid\":\"$agentId\",\"msgtype\":\"markdown\",\"markdown\":{\"content\":\"$msg\"}}"

@@ -1,0 +1,50 @@
+---
+# systemctl stop nginx.service && rm -rf /usr/lib/systemd/system/nginx.service && rm -rf /home/easy/ds/nginx/
+
+# check env
+- name: nginx required packages install
+  yum:
+    name:
+      - cmake
+      - openssl
+      - openssl-devel
+      - pcre
+      - pcre-devel
+      - zlib
+      - zlib-devel
+      - gd-devel
+      - libxml2-devel
+    state: latest
+
+# copy
+- name: nginx create related folders
+  file: name={{ item }} state=directory mode=755 recurse=yes
+  with_items:
+    - "{{ nginx_dir }}"
+    - "{{ nginx_vhost }}"
+    - "{{ nginx_deploy_path }}"
+
+- name: nginx install
+  unarchive:
+    src={{ pkg_dir }}/nginx-{{ nginx_version }}.tar.gz
+    dest={{ nginx_dir }}
+    mode=755
+
+- name: nginx copy service
+  template: src=nginx.service.j2 dest=/usr/lib/systemd/system/nginx.service mode=755
+
+# setup
+- name: nginx compile
+  shell: "cd {{ nginx_source_code_path }} && ./configure --prefix={{ nginx_deploy_path }} --http-log-path={{ nginx_log }}/access.log --error-log-path={{ nginx_log }}/error.log --with-http_ssl_module --with-http_v2_module --with-http_realip_module --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_image_filter_module --with-http_stub_status_module"
+
+- name: nginx make
+  shell: "cd {{ nginx_source_code_path }} && make && make install"
+
+- name: nginx copy config
+  template: src=nginx.conf.j2 dest={{ nginx_deploy_path }}/conf/nginx.conf mode=755
+
+- name: nginx source profile
+  shell: 'if [ `grep {{ nginx_deploy_path }}/sbin /etc/profile | wc -l` -eq 0 ]; then echo export PATH={{ nginx_deploy_path }}/sbin:\$PATH >> /etc/profile && source /etc/profile; else source /etc/profile; fi'
+
+- name: nginx start
+  shell: "systemctl daemon-reload && systemctl enable nginx"

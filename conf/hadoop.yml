@@ -1,0 +1,14 @@
+---
+
+hadoop:
+  fs.defaultFS: "file://{{ deploy_dir }}/backend/resource"
+
+  # fs.s3a.endpoint:
+
+  # fs.s3a.access.key:
+
+  # fs.s3a.secret.key:
+
+  # yarn.resourcemanager.ha.rm.ids:
+
+  # yarn.application.status.address:

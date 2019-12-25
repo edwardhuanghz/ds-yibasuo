@@ -1,0 +1,3 @@
+nginx_source_code_path: "{{ deploy_dir }}/nginx/nginx-{{ nginx_version }}"
+nginx_dir: "{{ deploy_dir }}/nginx/"
+nginx_log: "{{ nginx_deploy_path }}/logs"

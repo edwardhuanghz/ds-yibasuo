@@ -1,0 +1,20 @@
+---
+
+api:
+  # logging.config:
+
+  # server.port:
+
+  # server.servlet.session.timeout:
+
+  # server.servlet.context-path:
+
+  # spring.servlet.multipart.max-file-size:
+
+  # spring.servlet.multipart.max-request-size:
+
+  # server.jetty.max-http-post-size:
+
+  # spring.messages.encoding:
+
+  # spring.messages.basename:

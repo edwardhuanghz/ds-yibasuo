@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source ~/.bash_profile && source /etc/profile
+
+if [ `echo {{ zookeeper_version }} | awk '{split($0,a,"."); print a[length(a)]}'` -gt 7 ];then
+  {{ zookeeper_deploy_path }}/bin/zkCli.sh -server {{  groups['zookeeper_servers'] | mkstring_zk }} rmr $1
+else
+{{ zookeeper_deploy_path }}/bin/zkCli.sh -server {{ groups['zookeeper_servers'] | mkstring_zk }} <<EOF
+  rmr $1
+  quit
+EOF
+fi

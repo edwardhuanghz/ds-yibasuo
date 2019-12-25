@@ -1,0 +1,100 @@
+---
+
+#- name: Ensure only one monitoring host exists
+#  fail: msg="One monitoring host should be specified."
+#  when: groups['monitoring_servers'] | length != 1
+
+#- name: Ensure monitored_servers exists
+#  fail: msg="monitored_servers should be specified."
+#  when: groups['monitored_servers'] | length < 1
+
+- name: ensure host exists
+  fail: msg="please configure your DolphinScheduler host list"
+  when:
+    - groups['servers'] | length < 1
+
+- name: ensure db host exists
+  fail: msg="there must be a database"
+  when: groups['db_servers'] | length < 1
+
+- name: ensure master host exists
+  fail: msg="there must be a master"
+  when: groups['master_servers'] | length < 1
+
+- name: ensure worker host exists
+  fail: msg="there must be a worker"
+  when: groups['worker_servers'] | length < 1
+
+- name: ensure alert host exists
+  fail: msg="there must be a alert"
+  when: groups['alert_servers'] | length < 1
+
+- name: ensure api host exists
+  fail: msg="there must be a api"
+  when: groups['api_servers'] | length < 1
+
+- name: ensure nginx host exists
+  fail: msg="there must be a nginx"
+  when: groups['nginx_servers'] | length < 1
+
+- name: check ansible_user variable
+  fail: msg="ansible_user == 'root' is not supported, please ssh via normal user"
+  when: ansible_user == 'root'
+
+- name: ensure timezone variable is set
+  fail: msg="Please set timezone variable in inventory.ini."
+  when: (timezone is undefined) or (timezone is defined and timezone == "")
+
+#- name: close old SSH control master processes
+#  shell: pkill -f "ssh.*ansible.*"
+#  ignore_errors: true
+#  changed_when: false
+#  failed_when: false
+
+- name: check ansible version
+  fail:
+    msg: "Stop if ansible version is too low, make sure that the Ansible version is 2.4.2 or later, otherwise a compatibility issue occurs. Current ansible version is {{ ansible_version.full }}"
+  when: ansible_version.full | version_compare('2.4.2', '<')
+
+- name: check if jmespath installed
+  shell: pip list | grep -iw jmespath | wc -l
+  register: jmespath_exist
+
+- name: check if jinja2 installed
+  shell: pip list | grep -iw jinja2 | wc -l
+  register: jinja2_exist
+
+- name: preflight check - Fail when jmespath or jinja2 isn't installed
+  fail:
+    msg: "Jmespath or Jinja2 does not exist, Please run `pip install -r requirements.txt` to install."
+  when: jmespath_exist.stdout | int == 0 or jinja2_exist.stdout | int == 0
+
+- name: get jmespath info
+  shell: pip show jmespath | grep Version | grep -v Metadata-Version
+  register: jmespath
+
+- name: get jmespath version
+  set_fact:
+    jmespath_version: "{{ jmespath.stdout_lines[0] | replace('Version: ', '') }}"
+
+- name: get jinja2 info
+  shell: pip show jinja2 | grep Version | grep -v Metadata-Version
+  register: jinja2
+
+- name: get jinja2 version
+  set_fact:
+    jinja2_version: "{{ jinja2.stdout_lines[0] | replace('Version: ', '') }}"
+
+- name: preflight check - Fail when the versions of jmespath and jinja2 doesn't meet the requirements
+  fail:
+    msg: "Jmespath({{ jmespath_version }}) or jinja2({{ jinja2_version }}) version is too low, Please run `pip install --upgrade -r requirements.txt` to upgrade."
+  when: jmespath_version | version_compare('0.9.0', '<') or jinja2_version | version_compare('2.9.6', '<')
+
+#- name: check inventory configuration
+#  shell: python2 {{ playbook_dir }}/scripts/inventory_check.py {{ ansible_inventory_sources.0 }}
+#  register: inventory_check_result
+
+#- name: preflight check - If the inventory configuration is correct
+#  fail:
+#    msg: "{{ inventory_check_result.stdout }}"
+#  when: "'Check ok' not in inventory_check_result.stdout"

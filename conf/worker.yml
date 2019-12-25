@@ -1,0 +1,18 @@
+---
+
+apiworker:
+  # logging.config=classpath:worker_logback.xml
+
+    # server port
+  # server.port=7788
+
+worker:
+  # worker.exec.threads:
+
+  # worker.heartbeat.interval:
+
+  # worker.fetch.task.num :
+
+  # worker.max.cpuload.avg:
+
+  # worker.reserved.memory:

@@ -1,0 +1,30 @@
+---
+
+zookeeper:
+  # zookeeper.quorum: ""
+
+  # zookeeper.dolphinscheduler.root: "/dolphinscheduler"
+
+  # zookeeper.dolphinscheduler.dead.servers: "/dolphinscheduler/dead-servers"
+
+  # zookeeper.dolphinscheduler.masters: "/dolphinscheduler/masters"
+
+  # zookeeper.dolphinscheduler.workers: "/dolphinscheduler/workers"
+
+  # zookeeper.dolphinscheduler.lock.masters: "/dolphinscheduler/lock/masters"
+
+  # zookeeper.dolphinscheduler.lock.workers: "/dolphinscheduler/lock/workers"
+
+  # zookeeper.dolphinscheduler.lock.failover.masters: "/dolphinscheduler/lock/failover/masters"
+
+  # zookeeper.dolphinscheduler.lock.failover.workers: "/dolphinscheduler/lock/failover/workers"
+
+  # zookeeper.dolphinscheduler.lock.failover.startup.masters: "/dolphinscheduler/lock/failover/startup-masters"
+
+  # zookeeper.session.timeout: 300
+
+  # zookeeper.connection.timeout: 300
+
+  # zookeeper.retry.sleep: 1000
+
+  # zookeeper.retry.maxtime: 5

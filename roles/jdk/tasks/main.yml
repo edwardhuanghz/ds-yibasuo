@@ -1,0 +1,19 @@
+---
+
+- name: jdk create related folders
+  file: name={{ deploy_dir }}/jdk state=directory mode=755
+
+- name: jdk install
+  unarchive:
+    src={{ pkg_dir }}/{{ jdk_version }}.tar.gz
+    dest={{ deploy_dir }}/jdk/
+    mode=755
+
+- name: jdk setting profile
+  lineinfile: dest=~/.bash_profile state=present regexp={{ item.regexp }} line={{ item.line }}
+  with_items:
+    - { regexp: 'JAVA_HOME=', line: 'export JAVA_HOME={{ jdk_deploy_path }}' }
+    - { regexp: 'PATH=\$JAVA_HOME', line: 'export PATH=$JAVA_HOME/bin:$PATH' }
+
+- name: jdk source profile
+  shell: "source ~/.bash_profile && source /etc/profile"

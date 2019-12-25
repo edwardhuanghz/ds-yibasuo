@@ -1,0 +1,79 @@
+---
+
+- name: main dir
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: servers
+  tasks:
+    - name: mkdir
+      file: name={{ deploy_dir }} state=directory mode=755
+
+- name: deploying db
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: db_servers
+  tags:
+    - db
+  roles:
+    - mysql
+
+- name: deploying nginx
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: nginx_servers
+  tags:
+    - nginx
+  roles:
+    - nginx
+
+- name: deploying jdk
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: servers
+  tags:
+    - jdk
+  roles:
+    - jdk
+
+- name: deploying zookeeper
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: servers
+  tags:
+    - zookeeper
+  roles:
+    - zookeeper
+
+- name: deploying ds backend
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: servers
+  tags:
+    - backend
+  roles:
+    - backend
+
+- name: initialization ds backend db
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: db_servers
+  tags:
+    - backend_db
+  roles:
+    - backend_db
+
+- name: deploying ds front
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  any_errors_fatal: true
+  hosts: nginx_servers
+  tags:
+    - front
+  roles:
+    - front
+

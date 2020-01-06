@@ -197,9 +197,9 @@ ansible-playbook -i hosts.ini create_users.yml -u root -k
 
 ## inventory.ini 其他变量调整
 
-文件中 `[all:vars]` 以下的内容，是全局变量。定义好前面的角色后，我们来修改这里面的内容。
+定义好前面的角色后，我们来修改后面的配置。
 
-这里只讲解几个安装集群`必须`要配置的变量，其他的请查看[变量详解](./doc/inventory_var_explain.md)
+这里只讲解几个安装集群`必须`要修改的配置，深入了解ds的所有配置请查看[配置详解](./doc/conf_explain.md)
 
 | 变量 | 含义 |
 | --- | --- |

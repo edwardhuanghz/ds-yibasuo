@@ -41,9 +41,9 @@
   fail: msg="ansible_user == 'root' is not supported, please ssh via normal user"
   when: ansible_user == 'root'
 
-- name: ensure timezone variable is set
-  fail: msg="Please set timezone variable in inventory.ini."
-  when: (timezone is undefined) or (timezone is defined and timezone == "")
+#- name: ensure timezone variable is set
+#  fail: msg="Please set timezone variable in inventory.ini."
+#  when: (timezone is undefined) or (timezone is defined and timezone == "")
 
 #- name: close old SSH control master processes
 #  shell: pkill -f "ssh.*ansible.*"

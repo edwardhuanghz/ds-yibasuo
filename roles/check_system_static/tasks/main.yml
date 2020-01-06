@@ -1,7 +1,7 @@
 ---
 
 - name: close fuck firewall
-  shell: "systemctl stop firewalld.service && systemctl stop firewalld.service"
+  shell: "systemctl stop firewalld.service && systemctl disable firewalld.service"
 
 - name: Disk space check - Fail task when disk is full
   shell: df -h . | tail -n1

@@ -3,6 +3,4 @@
 # Configure for nginx
 nginx:
   esc_proxy_port: 8888
-  esc_api_server_port: 12345
-  esc_api_server_ip: "127.0.0.1"
-  esc_api_server: "127.0.0.1:12345"
+  esc_api_server: "http://127.0.0.1:12345"

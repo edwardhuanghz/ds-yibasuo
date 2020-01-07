@@ -1,7 +1,7 @@
 ---
 
 hadoop:
-  fs.defaultFS: "file://{{ deploy_dir }}/backend/resource"
+  fs.defaultFS: "file:///home/easy/ds/backend/dolphinscheduler_resource"
 
   # fs.s3a.endpoint:
 

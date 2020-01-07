@@ -2,7 +2,7 @@
 
 username="easy"
 password="easy"
-host="10.10.56.44"
+host="192.167.8.131"
 port=22
 
 expect -c "

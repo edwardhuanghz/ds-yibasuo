@@ -62,6 +62,11 @@
 # Replace configuration file.
 - name: ds backend copy env
   template: src=dolphinscheduler_env.sh.j2 dest={{ ds_backend_deploy_path }}/conf/env/.dolphinscheduler_env.sh mode=755
+# TODO 凑合先多复制一遍
+- name: ds backend copy env
+  become: yes
+  become_method: sudo
+  template: src=dolphinscheduler_env.sh.j2 dest=/opt/.dolphinscheduler_env.sh owner=root group=root mode=755
 
 - name: ds backend copy zk del shell
   template: src=del_zk_node.sh.j2 dest={{ ds_backend_deploy_path }}/bin/del_zk_node.sh mode=755

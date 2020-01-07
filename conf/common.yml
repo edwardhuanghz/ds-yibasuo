@@ -11,7 +11,7 @@ common:
 
   # hdfs.root.user:
 
-  data.store2hdfs.basepath: "{{ deploy_dir }}/backend/resource"
+  data.store2hdfs.basepath: "file:///home/easy/ds/backend/dolphinscheduler_resource"
 
   # res.upload.startup.type:
 
